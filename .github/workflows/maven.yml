@@ -32,7 +32,7 @@ jobs:
         with:
           timeout_minutes: 15
           max_attempts: 3
-          command: ./mvnw verify --no-transfer-progress -Pwebtests
+          command: ./mvnw verify -C --no-transfer-progress -Pwebtests
 
       - name: Setup Testcontainers Cloud client
         uses: atomicjar/testcontainers-cloud-setup-action@v1
