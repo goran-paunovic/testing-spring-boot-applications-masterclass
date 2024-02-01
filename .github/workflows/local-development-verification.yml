@@ -26,7 +26,7 @@ jobs:
           cache: maven
 
       - name: Verify the application startup (Windows)
-        if: ${{ env.RUNNER_OS == 'Windows' }}
+        if: ${{ github.env.RUNNER_OS == 'Windows' }}
         run: |
           docker compose up -d
 
@@ -35,7 +35,7 @@ jobs:
           health-check.ps1
 
       - name: Verify the application startup (macOS)
-        if: ${{ env.RUNNER_OS == 'macOS' }}
+        if: ${{ github.env.RUNNER_OS == 'macOS' }}
         run: |
           brew install docker
           colima start
@@ -47,7 +47,7 @@ jobs:
           timeout 180 .github/workflows/health-check.sh 8080
 
       - name: Verify the application startup (Linux)
-        if: ${{ env.RUNNER_OS == 'Linux' }}
+        if: ${{ github.env.RUNNER_OS == 'Linux' }}
         run: |
           docker compose up -d
 
