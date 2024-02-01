@@ -25,15 +25,31 @@ jobs:
           java-version: 21
           cache: maven
 
-      - name: Start the local environment and verify the application startup
+      - name: Verify the application startup (Windows)
+        if: env.RUNNER_OS == 'Windows'
         run: |
           docker compose up -d
 
-          if [[ "$RUNNER_OS" == "Windows"* ]]; then
-            mvnw.cmd spring-boot:run &
-          else
-            ./mvnw spring-boot:run &
-          fi
+          mvnw.cmd spring-boot:run
+
+      - name: Verify the application startup (macOS)
+        if: env.RUNNER_OS == 'macOS'
+        run: |
+          brew install docker
+          colima start
+
+          docker compose up -d
+
+          ./mvnw spring-boot:run &
+
+          timeout 180 .github/workflows/health-check.sh 8080
+
+      - name: Verify the application startup (Linux)
+        if: env.RUNNER_OS == 'Linux'
+        run: |
+          docker compose up -d
+
+          ./mvnw spring-boot:run &
 
           timeout 180 .github/workflows/health-check.sh 8080
 
