@@ -8,7 +8,10 @@ on:
 
 jobs:
   verify-local-development-mode:
-    runs-on: [ubuntu-22.04, windows-2022, macos-14, macos-13]
+    strategy:
+      matrix:
+        os: [ ubuntu-22.04, windows-2022, macos-13, macos-14 ]
+    runs-on: ${{ matrix.os }}
     name: Verify local development mode
     steps:
 
@@ -25,7 +28,13 @@ jobs:
       - name: Start the local environment and verify the application startup
         run: |
           docker compose up -d
-          mvn spring-boot:run &
+
+          if [[ "$RUNNER_OS" == "Windows"* ]]; then
+            mvnw.cmd spring-boot:run &
+          else
+            ./mvnw spring-boot:run &
+          fi
+
           timeout 180 .github/workflows/health-check.sh 8080
 
       - name: Stop local environment
