@@ -32,6 +32,8 @@ jobs:
 
           mvnw.cmd spring-boot:run
 
+          health-check.ps1
+
       - name: Verify the application startup (macOS)
         if: env.RUNNER_OS == 'macOS'
         run: |
